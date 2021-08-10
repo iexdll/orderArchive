@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package orderservice;
+option go_package = "/api";
+
+message GetRequest {
+  string id = 1;
+}
+
+message GetResponse {
+  Order order = 1;
+}
+
+message Order {
+  string id = 1;
+  string number = 2;
+  string date = 3;
+  string shippingDate = 4;
+  string deliveryDate = 5;
+  string customer = 6;
+  float sum = 7;
+  string tradePoint = 8;
+  PaymentType paymentType = 9;
+  DeliveryType deliveryType = 10;
+  TransportType transportType = 11;
+  Status status = 12;
+  string comment = 13;
+  string warehouseShipping = 14;
+}
+
+enum PaymentType {
+  CASH = 0;
+  CASHLESS = 1;
+  CARD = 2;
+}
+
+enum DeliveryType {
+  DELIVERY = 0;
+  PICKUP = 1;
+}
+
+enum TransportType {
+  CAR = 0;
+  RAILWAY = 1;
+  AVIA = 2;
+}
+
+enum Status {
+  DEFAULT = 0; //Записан
+  PROCESSED = 1; //Обработан
+  COLLECT = 2; //В сборке
+  COLLECTED = 3; //Собран
+  SHIPPED = 4; //Отгружен
+  CLOSED = 5; //Закрыт
+  CANCELED = 6; //Отменен
+  SUSPENDED = 7; //Приостановлен
+  NOTCOMPLETED = 8; //Не выполнен
+  PAYMENTEXPECTED = 9; //Ожидается оплата
+}
+
+service OrderService {
+  rpc Get(GetRequest) returns(GetResponse) {}
+}
