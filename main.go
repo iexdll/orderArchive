@@ -2,6 +2,13 @@ package main
 
 import (
 	"flag"
+	"github.com/BurntSushi/toml"
+	"google.golang.org/grpc"
+	"log"
+	"net"
+	"orderArchive/api"
+	"orderArchive/models"
+	"orderArchive/store/postgreSQL"
 )
 
 var configPath string
@@ -11,6 +18,33 @@ func init() {
 }
 
 func main() {
+
+	flag.Parse()
+
+	config := models.NewConfig()
+	_, err := toml.DecodeFile(configPath, config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db, err := postgreSQL.Connection(config.DBPostgreSQL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	store := postgreSQL.New(db)
+
+	server := grpc.NewServer()
+	instance := &api.OrderServer{Store: store}
+	api.RegisterOrderServiceServer(server, instance)
+
+	listener, err := net.Listen("tcp", config.BindAddr)
+	if err != nil {
+		log.Fatal("Unable to create grpc listener:", err)
+	}
+
+	if err = server.Serve(listener); err != nil {
+		log.Fatal("Unable to start server:", err)
+	}
 
 }
 
