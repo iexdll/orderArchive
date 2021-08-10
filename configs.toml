@@ -1,0 +1,4 @@
+bind_addr = ":8089"
+log_level = "debug"
+db_postgresql = "host=192.168.99.100 port=5432 dbname=orders sslmode=disable user=postgres password=qwerty"
+db_mongo = "mongodb://sa:nokia@10.75.40.78:27017/"
