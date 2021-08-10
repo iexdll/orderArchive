@@ -9,7 +9,7 @@ type Order struct {
 	ShippingDate      time.Time //date
 	DeliveryDate      time.Time //date
 	Customer          string    //uuid
-	Sum               float64   //money
+	Sum               float32   //money
 	TradePoint        string    //uuid
 	PaymentType       int32     //smallint
 	DeliveryType      int32     //smallint
