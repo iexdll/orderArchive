@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"orderArchive/models"
+	"strings"
 	"time"
 	"unicode/utf8"
 )
@@ -20,18 +21,19 @@ func (r *OrderRepository) Save(o *models.Order) error {
 
 func (r *OrderRepository) Get(id string) (*models.Order, error) {
 
+	orderID := strings.ToUpper(id)
 	order := &models.Order{}
 
 	var result bson.M
 	collection := r.store.db.Collection("orders")
-	err := collection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&result)
+	err := collection.FindOne(context.TODO(), bson.M{"_id": orderID}).Decode(&result)
 
 	if err != nil {
 		//Добавить проверку на mongo: no documents in result
 		return nil, err
 	}
 
-	orderCancel, err := r.getOrderCancel(id)
+	orderCancel, err := r.getOrderCancel(orderID)
 	if err != nil {
 		return nil, err
 	}
