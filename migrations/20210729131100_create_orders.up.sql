@@ -6,7 +6,7 @@ CREATE TABLE "orders"
     "shippingDate"      date,
     "deliveryDate"      date,
     "customer"          uuid,
-    "sum"               money,
+    "sum"               numeric(15,4),
     "tradePoint"        uuid,
     "warehouseShipping" uuid,
     "paymentType"       smallint,
@@ -20,13 +20,13 @@ CREATE TABLE "orders"
 CREATE TABLE public."orderRows"
 (
     "order"       uuid NOT NULL,
-    "rowNumber"   smallint,
+    "rowNumber"   integer,
     "rowID"       uuid,
     "goods"       uuid,
     "group"       uuid,
-    "price"       money,
-    "count"       smallint,
-    "countCancel" smallint,
+    "price"       numeric(15,4),
+    "count"       integer,
+    "countCancel" integer,
     "comment"     character varying(255) COLLATE pg_catalog."default"
 );
 
