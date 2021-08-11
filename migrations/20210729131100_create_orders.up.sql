@@ -2,7 +2,7 @@ CREATE TABLE "orders"
 (
     "id"                uuid NOT NULL,
     "number"            character varying(10) COLLATE pg_catalog."default",
-    "date"              timestamp without time zone,
+    "date"              timestamp with time zone,
     "shippingDate"      date,
     "deliveryDate"      date,
     "customer"          uuid,
