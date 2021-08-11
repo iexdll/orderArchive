@@ -1,6 +1,7 @@
 package postgreSQL
 
 import (
+	"database/sql"
 	"log"
 	"orderArchive/models"
 	"time"
@@ -95,8 +96,53 @@ func (r *OrderRepository) Save(o *models.Order) error {
 }
 
 func (r *OrderRepository) Get(id string) (*models.Order, error) {
-	o := &models.Order{}
-	return o, nil
+
+	order := &models.Order{}
+
+	row := r.store.db.QueryRow("SELECT "+
+		`id,`+
+		`number,`+
+		`date,`+
+		`"shippingDate",`+
+		`"deliveryDate",`+
+		`customer,`+
+		`sum::money::numeric::float8,`+
+		`"tradePoint",`+
+		`"paymentType",`+
+		`"deliveryType",`+
+		`"transportType",`+
+		`status,`+
+		`comment,`+
+		`"warehouseShipping"`+
+		" FROM orders WHERE id = $1", id)
+
+	err := row.Scan(
+		&order.ID,
+		&order.Number,
+		&order.Date,
+		&order.ShippingDate,
+		&order.DeliveryDate,
+		&order.Customer,
+		&order.Sum,
+		&order.TradePoint,
+		&order.PaymentType,
+		&order.DeliveryType,
+		&order.TransportType,
+		&order.Status,
+		&order.Comment,
+		&order.WarehouseShipping)
+
+	switch err {
+	case sql.ErrNoRows:
+		log.Println("No rows were returned!")
+		return order, nil
+	case nil:
+		log.Println(order)
+	default:
+		panic(err)
+	}
+
+	return order, nil
 }
 
 func (r *OrderRepository) FindByDate(dateSart time.Time, dateEnd time.Time) ([]string, error) {
