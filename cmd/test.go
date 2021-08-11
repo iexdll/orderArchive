@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/BurntSushi/toml"
+	"github.com/google/go-cmp/cmp"
 	"log"
 	"orderArchive/models"
 	"orderArchive/store/mongoDB"
@@ -42,10 +43,8 @@ func main() {
 	orderID := "002106A8-20EF-D584-6059-5AA48AF6AE68"
 	orderM, err := storeM.Order().Get(orderID)
 	orderP, err := storeP.Order().Get(orderID)
-	orderM.AfterGet()
-	orderP.AfterGet()
 
 	log.Println(orderM)
 	log.Println(orderP)
-	log.Println(orderM == orderP)
+	log.Println(cmp.Equal(orderM, orderP))
 }
