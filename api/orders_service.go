@@ -77,7 +77,7 @@ func (s *OrderServer) Get(ctx context.Context, request *GetRequest) (*GetRespons
 			ShippingDate:      order.ShippingDate.String(),
 			DeliveryDate:      order.DeliveryDate.String(),
 			Customer:          order.Customer,
-			Sum:               order.Sum,
+			Sum:               float32(order.Sum),
 			TradePoint:        order.TradePoint,
 			PaymentType:       paymentType,
 			DeliveryType:      deliveryType,

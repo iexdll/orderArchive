@@ -49,7 +49,7 @@ func (r *OrderRepository) Get(id string) (*models.Order, error) {
 		order.WarehouseShipping = "00000000-0000-0000-0000-000000000000"
 	}
 	order.Customer = result["customer"].(string)
-	order.Sum = result["sum"].(float32)
+	order.Sum = result["sum"].(float64)
 	order.TradePoint = result["tradePoint"].(string)
 	order.PaymentType = result["paymentType"].(int32)
 	order.DeliveryType = result["deliveryType"].(int32)

@@ -3,30 +3,30 @@ package models
 import "time"
 
 type Order struct {
-	ID                string    //uuid
-	Number            string    //varchar(10)
-	Date              time.Time //timestamp
-	ShippingDate      time.Time //date
-	DeliveryDate      time.Time //date
-	Customer          string    //uuid
-	Sum               float32   //money
-	TradePoint        string    //uuid
-	PaymentType       int32     //smallint
-	DeliveryType      int32     //smallint
-	TransportType     int32     //smallint
-	Status            int32     //smallint
-	Comment           string    //varchar(100)
-	WarehouseShipping string    //uuid
+	ID                string
+	Number            string
+	Date              time.Time
+	ShippingDate      time.Time
+	DeliveryDate      time.Time
+	Customer          string
+	Sum               float64
+	TradePoint        string
+	PaymentType       int32
+	DeliveryType      int32
+	TransportType     int32
+	Status            int32
+	Comment           string
+	WarehouseShipping string
 	GoodsList         []OrderRow
 }
 
 type OrderRow struct {
-	RowNumber   int32   //smallint
-	RowID       string  //uuid
-	Goods       string  //uuid
-	Group       string  //uuid
-	Price       float64 //money
-	Count       int32   //smallint
-	CountCancel int32   //smallint
-	Comment     string  //varchar(100)
+	RowNumber   int32
+	RowID       string
+	Goods       string
+	Group       string
+	Price       float64
+	Count       int32
+	CountCancel int32
+	Comment     string
 }
