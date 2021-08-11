@@ -106,7 +106,7 @@ func (r *OrderRepository) Get(id string) (*models.Order, error) {
 		`"shippingDate",`+
 		`"deliveryDate",`+
 		`customer,`+
-		`sum::money::numeric::float8,`+
+		`sum,`+
 		`"tradePoint",`+
 		`"paymentType",`+
 		`"deliveryType",`+
@@ -114,7 +114,7 @@ func (r *OrderRepository) Get(id string) (*models.Order, error) {
 		`status,`+
 		`comment,`+
 		`"warehouseShipping"`+
-		" FROM orders WHERE id = $1", id)
+		` FROM orders WHERE id = $1`, id)
 
 	err := row.Scan(
 		&order.ID,
@@ -132,14 +132,48 @@ func (r *OrderRepository) Get(id string) (*models.Order, error) {
 		&order.Comment,
 		&order.WarehouseShipping)
 
-	switch err {
-	case sql.ErrNoRows:
-		log.Println("No rows were returned!")
+	if err == sql.ErrNoRows {
 		return order, nil
-	case nil:
-		log.Println(order)
-	default:
-		panic(err)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := r.store.db.Query("SELECT "+
+		`"rowNumber",`+
+		`"rowID",`+
+		`goods,`+
+		`"group",`+
+		`price,`+
+		`count,`+
+		`"countCancel",`+
+		`comment`+
+		` FROM "orderRows" WHERE "order" = $1`, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		orderRow := models.OrderRow{}
+
+		err = rows.Scan(
+			&orderRow.RowNumber,
+			&orderRow.RowID,
+			&orderRow.Goods,
+			&orderRow.Group,
+			&orderRow.Price,
+			&orderRow.Count,
+			&orderRow.CountCancel,
+			&orderRow.Comment)
+
+		if err != nil {
+			return nil, err
+		}
+
+		order.GoodsList = append(order.GoodsList, orderRow)
 	}
 
 	return order, nil
