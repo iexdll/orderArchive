@@ -176,6 +176,7 @@ func (r *OrderRepository) Get(id string) (*models.Order, error) {
 		order.GoodsList = append(order.GoodsList, orderRow)
 	}
 
+	order.AfterGet()
 	return order, nil
 }
 
