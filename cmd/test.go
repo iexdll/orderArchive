@@ -5,6 +5,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"log"
 	"orderArchive/models"
+	"orderArchive/store/mongoDB"
 	"orderArchive/store/postgreSQL"
 )
 
@@ -26,15 +27,25 @@ func main() {
 		log.Fatal(err)
 	}
 
+	dbMongo, err := mongoDB.Connection(config.DBMongo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	storeM := mongoDB.New(dbMongo)
+
 	dbPostgreSQL, err := postgreSQL.Connection(config.DBPostgreSQL)
 	if err != nil {
 		log.Fatal(err)
 	}
 	storeP := postgreSQL.New(dbPostgreSQL)
 
-	o, err := storeP.Order().Get("00000f6d-96ce-ae45-7b95-6ce92029fd28")
+	orderID := "002106A8-20EF-D584-6059-5AA48AF6AE68"
+	orderM, err := storeM.Order().Get(orderID)
+	orderP, err := storeP.Order().Get(orderID)
+	orderM.AfterGet()
+	orderP.AfterGet()
 
-	log.Println(err)
-	log.Println(o)
-
+	log.Println(orderM)
+	log.Println(orderP)
+	log.Println(orderM == orderP)
 }
