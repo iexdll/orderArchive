@@ -24,12 +24,12 @@ func main() {
 	config := models.NewConfig()
 	_, err := toml.DecodeFile(configPath, config)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Ошибка получения настроек: ", err)
 	}
 
 	db, err := postgreSQL.Connection(config.DBPostgreSQL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Ошибка подключения к БД: ", err)
 	}
 	store := postgreSQL.New(db)
 
@@ -39,11 +39,11 @@ func main() {
 
 	listener, err := net.Listen("tcp", config.BindAddr)
 	if err != nil {
-		log.Fatal("Unable to create grpc listener:", err)
+		log.Fatal("Ошибка создания gRPC:", err)
 	}
 
 	if err = server.Serve(listener); err != nil {
-		log.Fatal("Unable to start server:", err)
+		log.Fatal("Ошибка запуска gRPC сервера:", err)
 	}
 
 }
