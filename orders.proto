@@ -5,12 +5,8 @@ option go_package = "/api";
 option php_namespace = "App\\API\\OrderArhive";
 option php_metadata_namespace = "App\\API\\GPBMetadata";
 
-message GetRequest {
+message GetOrder {
   string id = 1;
-}
-
-message GetResponse {
-  Order order = 1;
 }
 
 message Order {
@@ -73,5 +69,5 @@ enum Status {
 }
 
 service OrderService {
-  rpc Get(GetRequest) returns(GetResponse) {}
+  rpc Get(GetOrder) returns(Order) {}
 }

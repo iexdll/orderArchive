@@ -13,7 +13,7 @@ func (s *OrderServer) mustEmbedUnimplementedOrderServiceServer() {
 	panic("implement me")
 }
 
-func (s *OrderServer) Get(ctx context.Context, request *GetRequest) (*GetResponse, error) {
+func (s *OrderServer) Get(ctx context.Context, request *GetOrder) (*Order, error) {
 
 	order, err := s.Store.Order().Get(request.Id)
 	if err != nil {
@@ -83,24 +83,22 @@ func (s *OrderServer) Get(ctx context.Context, request *GetRequest) (*GetRespons
 		})
 	}
 
-	response := &GetResponse{
-		Order: &Order{
-			Id:                order.ID,
-			Number:            order.Number,
-			Date:              order.Date.Format("2006-01-02 15:04:05"),
-			ShippingDate:      order.ShippingDate.Format("2006-01-02 15:04:05"),
-			DeliveryDate:      order.DeliveryDate.Format("2006-01-02 15:04:05"),
-			Customer:          order.Customer,
-			Sum:               float32(order.Sum),
-			TradePoint:        order.TradePoint,
-			PaymentType:       paymentType,
-			DeliveryType:      deliveryType,
-			TransportType:     transportType,
-			Status:            status,
-			Comment:           order.Comment,
-			WarehouseShipping: order.WarehouseShipping,
-			GoodsList:         goodsList,
-		},
+	response := &Order{
+		Id:                order.ID,
+		Number:            order.Number,
+		Date:              order.Date.Format("2006-01-02 15:04:05"),
+		ShippingDate:      order.ShippingDate.Format("2006-01-02 15:04:05"),
+		DeliveryDate:      order.DeliveryDate.Format("2006-01-02 15:04:05"),
+		Customer:          order.Customer,
+		Sum:               float32(order.Sum),
+		TradePoint:        order.TradePoint,
+		PaymentType:       paymentType,
+		DeliveryType:      deliveryType,
+		TransportType:     transportType,
+		Status:            status,
+		Comment:           order.Comment,
+		WarehouseShipping: order.WarehouseShipping,
+		GoodsList:         goodsList,
 	}
 
 	return response, err
