@@ -69,6 +69,20 @@ func (s *OrderServer) Get(ctx context.Context, request *GetRequest) (*GetRespons
 		status = Status_PAYMENTEXPECTED
 	}
 
+	var goodsList []*OrderRow
+	for _, item := range order.GoodsList {
+		goodsList = append(goodsList, &OrderRow{
+			RowNumber:   item.RowNumber,
+			RowID:       item.RowID,
+			Goods:       item.Goods,
+			Group:       item.Group,
+			Price:       float32(item.Price),
+			Count:       item.Count,
+			CountCancel: item.CountCancel,
+			Comment:     item.Comment,
+		})
+	}
+
 	response := &GetResponse{
 		Order: &Order{
 			Id:                order.ID,
@@ -85,6 +99,7 @@ func (s *OrderServer) Get(ctx context.Context, request *GetRequest) (*GetRespons
 			Status:            status,
 			Comment:           order.Comment,
 			WarehouseShipping: order.WarehouseShipping,
+			GoodsList:         goodsList,
 		},
 	}
 

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package orderservice;
 option go_package = "/api";
-option php_namespace= "App\\API\\OrderArhive";
+option php_namespace = "App\\API\\OrderArhive";
 option php_metadata_namespace = "App\\API\\GPBMetadata";
 
 message GetRequest {
@@ -28,6 +28,18 @@ message Order {
   Status status = 12;
   string comment = 13;
   string warehouseShipping = 14;
+  repeated OrderRow GoodsList = 15;
+}
+
+message OrderRow {
+  int32 RowNumber = 1;
+  string RowID = 2;
+  string Goods = 3;
+  string Group = 4;
+  float Price = 5;
+  int32 Count = 6;
+  int32 CountCancel = 7;
+  string Comment = 8;
 }
 
 enum PaymentType {
