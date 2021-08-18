@@ -18,6 +18,12 @@ message GetList {
   int32 limit = 4;
 }
 
+message GetByGoods {
+  string customer = 1;
+  string tradePoint = 2;
+  repeated string goods = 3;
+}
+
 message Orders {
   repeated Order orders = 1;
 }
@@ -84,4 +90,5 @@ enum Status {
 service OrderService {
   rpc Get(GetOrder) returns(Order) {}
   rpc List(GetList) returns(Orders) {}
+  rpc FindByGoods(GetByGoods) returns(Orders) {}
 }

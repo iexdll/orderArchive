@@ -5,6 +5,7 @@ import (
 	"log"
 	"orderArchive/models"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -209,6 +210,50 @@ func (r *OrderRepository) FindIDByCustomer(customer string, tradePoint string, l
 		query = query + ` OFFSET $` + strconv.Itoa(len(param)+1)
 		param = append(param, skip)
 	}
+
+	rows, err := r.store.db.Query(query, param...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []string
+	for rows.Next() {
+		var id string
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		orders = append(orders, id)
+	}
+
+	return orders, nil
+}
+
+func (r *OrderRepository) FindIDByGoods(customer string, tradePoint string, goodsID []string) ([]string, error) {
+
+	var param []interface{}
+
+	query := `SELECT DISTINCT 
+                o.id 
+			  FROM orders AS o 
+			  INNER JOIN "orderRows" AS r
+			      ON r.order = o.id 
+			  WHERE o.customer = $1`
+
+	param = append(param, customer)
+
+	if models.EmptyRef != tradePoint {
+		query = query + ` AND o."tradePoint" = $` + strconv.Itoa(len(param)+1)
+		param = append(param, tradePoint)
+	}
+
+	var p []string
+	for _, goods := range goodsID {
+		p = append(p, "$"+strconv.Itoa(len(param)+1))
+		param = append(param, goods)
+	}
+	query = query + ` AND r.goods IN (` + strings.Join(p, ",") + `)`
 
 	rows, err := r.store.db.Query(query, param...)
 

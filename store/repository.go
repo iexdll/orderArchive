@@ -10,4 +10,5 @@ type OrderRepository interface {
 	Get(string) (*models.Order, error)
 	FindIDByDate(time.Time, time.Time) ([]string, error)
 	FindIDByCustomer(string, string, int32, int32) ([]string, error)
+	FindIDByGoods(string, string, []string) ([]string, error)
 }

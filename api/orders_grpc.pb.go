@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type OrderServiceClient interface {
 	Get(ctx context.Context, in *GetOrder, opts ...grpc.CallOption) (*Order, error)
 	List(ctx context.Context, in *GetList, opts ...grpc.CallOption) (*Orders, error)
+	FindByGoods(ctx context.Context, in *GetByGoods, opts ...grpc.CallOption) (*Orders, error)
 }
 
 type orderServiceClient struct {
@@ -48,12 +49,22 @@ func (c *orderServiceClient) List(ctx context.Context, in *GetList, opts ...grpc
 	return out, nil
 }
 
+func (c *orderServiceClient) FindByGoods(ctx context.Context, in *GetByGoods, opts ...grpc.CallOption) (*Orders, error) {
+	out := new(Orders)
+	err := c.cc.Invoke(ctx, "/orderservice.OrderService/FindByGoods", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 // All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility
 type OrderServiceServer interface {
 	Get(context.Context, *GetOrder) (*Order, error)
 	List(context.Context, *GetList) (*Orders, error)
+	FindByGoods(context.Context, *GetByGoods) (*Orders, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -66,6 +77,9 @@ func (UnimplementedOrderServiceServer) Get(context.Context, *GetOrder) (*Order, 
 }
 func (UnimplementedOrderServiceServer) List(context.Context, *GetList) (*Orders, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedOrderServiceServer) FindByGoods(context.Context, *GetByGoods) (*Orders, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindByGoods not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 
@@ -116,6 +130,24 @@ func _OrderService_List_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_FindByGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByGoods)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).FindByGoods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/orderservice.OrderService/FindByGoods",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).FindByGoods(ctx, req.(*GetByGoods))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +162,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _OrderService_List_Handler,
+		},
+		{
+			MethodName: "FindByGoods",
+			Handler:    _OrderService_FindByGoods_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

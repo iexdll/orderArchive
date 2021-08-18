@@ -23,6 +23,10 @@ func (r *OrderRepository) FindIDByCustomer(customer string, tradePoint string, l
 	return nil, nil
 }
 
+func (r *OrderRepository) FindIDByGoods(customer string, tradePoint string, goodsID []string) ([]string, error) {
+	return nil, nil
+}
+
 func (r *OrderRepository) Get(id string) (*models.Order, error) {
 
 	orderID := strings.ToUpper(id)

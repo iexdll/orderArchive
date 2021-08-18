@@ -55,6 +55,27 @@ func (s *OrderServer) List(ctx context.Context, request *GetList) (*Orders, erro
 
 }
 
+func (s *OrderServer) FindByGoods(ctx context.Context, request *GetByGoods) (*Orders, error) {
+
+	ordersID, err := s.Store.Order().FindIDByGoods(request.Customer, request.TradePoint, request.Goods)
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []*Order
+	for _, id := range ordersID {
+		order, err := s.Store.Order().Get(id)
+		if err != nil {
+			return nil, err
+		}
+
+		orders = append(orders, toOrderGRPC(order))
+	}
+
+	return &Orders{Orders: orders}, err
+
+}
+
 func toOrderGRPC(order *models.Order) *Order {
 
 	var paymentType PaymentType

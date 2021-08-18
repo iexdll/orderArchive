@@ -32,12 +32,14 @@ func main() {
 	}
 	storeP := postgreSQL.New(dbPostgreSQL)
 
-	customer := "11a4e868-e826-43a9-9e13-a86f34581ec6"
+	customer := "8e5d3d3a-84a1-11e1-97d7-0015179b1a7d"
 	tradePoint := models.EmptyRef
+	goods := []string{"4e9c219e-4408-11dc-b133-000e0c3ed2d6", "5a65c8cf-1215-11de-af36-000e0ce9b9aa"}
 
-	ordersID, err := storeP.Order().FindIDByCustomer(customer, tradePoint, 10, -1)
-	//log.Println(err)
-	//log.Println(orders)
+	//ordersID, err := storeP.Order().FindIDByCustomer(customer, tradePoint, 10, -1)
+	ordersID, err := storeP.Order().FindIDByGoods(customer, tradePoint, goods)
+	log.Println(err)
+	log.Println(ordersID)
 
 	var o []*models.Order
 	for _, id := range ordersID {
