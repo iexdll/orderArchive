@@ -198,6 +198,8 @@ func (r *OrderRepository) FindIDByCustomer(customer string, tradePoint string, l
 		param = append(param, tradePoint)
 	}
 
+	query = query + ` ORDER BY "date" DESC`
+
 	if limit > -1 {
 		query = query + ` LIMIT $` + strconv.Itoa(len(param)+1)
 		param = append(param, limit)
