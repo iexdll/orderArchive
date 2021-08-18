@@ -31,4 +31,6 @@ CREATE TABLE public."orderRows"
 );
 
 CREATE INDEX "order" ON public.orders USING btree (id ASC NULLS LAST) TABLESPACE pg_default;
+CREATE INDEX "orderCustomer" ON public.orders USING btree (customer ASC NULLS LAST, "tradePoint" ASC NULLS LAST, date ASC NULLS LAST) TABLESPACE pg_default;
 CREATE INDEX "orderRow" ON public."orderRows" USING btree ("order" ASC NULLS LAST) TABLESPACE pg_default;
+CREATE INDEX "orderRowGoods" ON public."orderRows" USING btree ("order" ASC NULLS LAST, goods ASC NULLS LAST) TABLESPACE pg_default;
