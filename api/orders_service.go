@@ -5,6 +5,7 @@ import (
 	"errors"
 	"orderArchive/models"
 	"orderArchive/store/postgreSQL"
+	"strings"
 )
 
 type OrderServer struct {
@@ -22,11 +23,11 @@ func (s *OrderServer) Get(ctx context.Context, request *GetOrder) (*Order, error
 		return nil, err
 	}
 
-	if order.Customer != request.Customer {
+	if order.Customer != strings.ToUpper(request.Customer) {
 		return nil, errors.New("401. Заказ принадлежит другому клиенту")
 	}
 
-	if models.EmptyRef != request.TradePoint && order.TradePoint != request.TradePoint {
+	if models.EmptyRef != request.TradePoint && order.TradePoint != strings.ToUpper(request.TradePoint) {
 		return nil, errors.New("401. Заказ принадлежит другой торговой точке")
 	}
 
