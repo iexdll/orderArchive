@@ -19,6 +19,10 @@ func (r *OrderRepository) Save(o *models.Order) error {
 	return nil
 }
 
+func (r *OrderRepository) FindIDByCustomer(customer string, tradePoint string, limit int32, skip int32) ([]string, error) {
+	return nil, nil
+}
+
 func (r *OrderRepository) Get(id string) (*models.Order, error) {
 
 	orderID := strings.ToUpper(id)
@@ -126,7 +130,7 @@ func (r *OrderRepository) getOrderCancel(id string) (map[string]int32, error) {
 	return orderCancel, nil
 }
 
-func (r *OrderRepository) FindByDate(dateStart time.Time, dateEnd time.Time) ([]string, error) {
+func (r *OrderRepository) FindIDByDate(dateStart time.Time, dateEnd time.Time) ([]string, error) {
 
 	findOptions := options.Find()
 	findOptions.SetProjection(bson.M{"_id": 1})

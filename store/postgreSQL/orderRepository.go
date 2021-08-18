@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"orderArchive/models"
+	"strconv"
 	"time"
 )
 
@@ -180,7 +181,48 @@ func (r *OrderRepository) Get(id string) (*models.Order, error) {
 	return order, nil
 }
 
-func (r *OrderRepository) FindByDate(dateSart time.Time, dateEnd time.Time) ([]string, error) {
+func (r *OrderRepository) FindIDByDate(dateSart time.Time, dateEnd time.Time) ([]string, error) {
 	var orders []string
+	return orders, nil
+}
+
+func (r *OrderRepository) FindIDByCustomer(customer string, tradePoint string, limit int32, skip int32) ([]string, error) {
+
+	var param []interface{}
+
+	query := `SELECT "id" FROM orders WHERE customer = $1`
+	param = append(param, customer)
+
+	if models.EmptyRef != tradePoint {
+		query = query + ` AND "tradePoint" = $` + strconv.Itoa(len(param)+1)
+		param = append(param, tradePoint)
+	}
+
+	if limit > -1 {
+		query = query + ` LIMIT $` + strconv.Itoa(len(param)+1)
+		param = append(param, limit)
+	}
+
+	if skip > -1 {
+		query = query + ` OFFSET $` + strconv.Itoa(len(param)+1)
+		param = append(param, skip)
+	}
+
+	rows, err := r.store.db.Query(query, param...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []string
+	for rows.Next() {
+		var id string
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		orders = append(orders, id)
+	}
+
 	return orders, nil
 }
