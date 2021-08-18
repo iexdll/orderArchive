@@ -7,6 +7,19 @@ option php_metadata_namespace = "App\\API\\GPBMetadata";
 
 message GetOrder {
   string id = 1;
+  string customer = 2;
+  string tradePoint = 3;
+}
+
+message GetList {
+  string customer = 1;
+  string tradePoint = 2;
+  int32 skip = 3;
+  int32 limit = 4;
+}
+
+message Orders {
+  repeated Order orders = 1;
 }
 
 message Order {
@@ -24,7 +37,7 @@ message Order {
   Status status = 12;
   string comment = 13;
   string warehouseShipping = 14;
-  repeated OrderRow GoodsList = 15;
+  repeated OrderRow goodsList = 15;
 }
 
 message OrderRow {
@@ -70,4 +83,5 @@ enum Status {
 
 service OrderService {
   rpc Get(GetOrder) returns(Order) {}
+  rpc List(GetList) returns(Orders) {}
 }
