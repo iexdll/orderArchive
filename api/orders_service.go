@@ -2,6 +2,8 @@ package api
 
 import (
 	"context"
+	"errors"
+	"orderArchive/models"
 	"orderArchive/store/postgreSQL"
 )
 
@@ -19,6 +21,40 @@ func (s *OrderServer) Get(ctx context.Context, request *GetOrder) (*Order, error
 	if err != nil {
 		return nil, err
 	}
+
+	if order.Customer != request.Customer {
+		return nil, errors.New("401. Заказ принадлежит другому клиенту")
+	}
+
+	if models.EmptyRef != request.TradePoint && order.TradePoint != request.TradePoint {
+		return nil, errors.New("401. Заказ принадлежит другой торговой точке")
+	}
+
+	return toOrderGRPC(order), err
+}
+
+func (s *OrderServer) List(ctx context.Context, request *GetList) (*Orders, error) {
+
+	ordersID, err := s.Store.Order().FindIDByCustomer(request.Customer, request.TradePoint, request.Limit, request.Skip)
+	if err != nil {
+		return nil, err
+	}
+
+	var orders []*Order
+	for _, id := range ordersID {
+		order, err := s.Store.Order().Get(id)
+		if err != nil {
+			return nil, err
+		}
+
+		orders = append(orders, toOrderGRPC(order))
+	}
+
+	return &Orders{Orders: orders}, err
+
+}
+
+func toOrderGRPC(order *models.Order) *Order {
 
 	var paymentType PaymentType
 	if order.PaymentType == 1 {
@@ -83,7 +119,7 @@ func (s *OrderServer) Get(ctx context.Context, request *GetOrder) (*Order, error
 		})
 	}
 
-	response := &Order{
+	return &Order{
 		Id:                order.ID,
 		Number:            order.Number,
 		Date:              order.Date.Format("2006-01-02 15:04:05"),
@@ -100,6 +136,4 @@ func (s *OrderServer) Get(ctx context.Context, request *GetOrder) (*Order, error
 		WarehouseShipping: order.WarehouseShipping,
 		GoodsList:         goodsList,
 	}
-
-	return response, err
 }
