@@ -52,7 +52,7 @@ func main() {
 	dStart, _ := time.ParseInLocation("2006-01-02T15:04:05", dateStart+"T00:00:00", MST)
 	dEnd, _ := time.ParseInLocation("2006-01-02T15:04:05", dateEnd+"T23:59:59", MST)
 
-	orders, _ := storeM.Order().FindByDate(dStart, dEnd)
+	orders, _ := storeM.Order().FindIDByDate(dStart, dEnd)
 	ordersLen := len(orders)
 
 	log.Printf("Заказов с %v по %v: %d\n", dStart, dEnd, ordersLen)
