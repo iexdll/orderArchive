@@ -57,12 +57,17 @@ func (s *OrderServer) List(ctx context.Context, request *GetList) (*Orders, erro
 
 func (s *OrderServer) FindByGoods(ctx context.Context, request *GetByGoods) (*Orders, error) {
 
+	var orders []*Order
+
+	if len(request.Goods) == 0 {
+		return &Orders{Orders: orders}, nil
+	}
+
 	ordersID, err := s.Store.Order().FindIDByGoods(request.Customer, request.TradePoint, request.Goods)
 	if err != nil {
 		return nil, err
 	}
 
-	var orders []*Order
 	for _, id := range ordersID {
 		order, err := s.Store.Order().Get(id)
 		if err != nil {
