@@ -58,20 +58,23 @@ message OrderRow {
 }
 
 enum PaymentType {
-  CASH = 0;
-  CASHLESS = 1;
-  CARD = 2;
+  PAY_EMPTY = 0;
+  CASH = 1;
+  CASHLESS = 2;
+  CARD = 3;
 }
 
 enum DeliveryType {
-  DELIVERY = 0;
-  PICKUP = 1;
+  DELIVERY_EMPTY = 0;
+  DELIVERY = 1;
+  PICKUP = 2;
 }
 
 enum TransportType {
-  CAR = 0;
-  RAILWAY = 1;
-  AVIA = 2;
+  TRANSPORT_EMPTY = 0;
+  CAR = 1;
+  RAILWAY = 2;
+  AVIA = 3;
 }
 
 enum Status {

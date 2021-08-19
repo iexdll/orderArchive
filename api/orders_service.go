@@ -109,10 +109,7 @@ func toOrderGRPC(order *models.Order) *Order {
 	}
 
 	var status Status
-	status = Status_DEFAULT
-	if order.Status == 0 {
-		status = Status_COLLECT
-	} else if order.Status == 1 {
+	if order.Status == 1 {
 		status = Status_PROCESSED
 	} else if order.Status == 2 {
 		status = Status_COLLECT
