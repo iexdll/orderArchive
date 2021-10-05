@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package orderservice;
 option go_package = "/api";
-option php_namespace = "App\\API\\OrderArhive";
+option php_namespace = "App\\API\\OrderArchive";
 option php_metadata_namespace = "App\\API\\GPBMetadata";
 
 message GetOrder {
