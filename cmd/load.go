@@ -17,8 +17,8 @@ var (
 	lockCountDoneOrders sync.Mutex
 )
 
-const dateStart = "2017-01-01"
-const dateEnd = "2017-09-01"
+const dateStart = "2019-01-01"
+const dateEnd = "2020-01-01"
 const countChannel = 30
 const countOrderChannel = 1000
 
