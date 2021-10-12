@@ -18,7 +18,7 @@ var (
 )
 
 const dateStart = "2019-01-01"
-const dateEnd = "2020-01-01"
+const dateEnd = "2019-02-01"
 const countChannel = 30
 const countOrderChannel = 1000
 
@@ -52,10 +52,17 @@ func main() {
 	dStart, _ := time.ParseInLocation("2006-01-02T15:04:05", dateStart+"T00:00:00", MST)
 	dEnd, _ := time.ParseInLocation("2006-01-02T15:04:05", dateEnd+"T23:59:59", MST)
 
-	orders, _ := storeM.Order().FindIDByDate(dStart, dEnd)
+	orders, err := storeM.Order().FindIDByDate(dStart, dEnd)
+	if err != nil {
+		log.Fatal(err)
+	}
 	ordersLen := len(orders)
 
 	log.Printf("Заказов с %v по %v: %d\n", dStart, dEnd, ordersLen)
+
+	if ordersLen == 0 {
+		log.Fatal("Нет заказов для переноса")
+	}
 
 	c := make(chan Slice, countChannel)
 	for i := 0; i < countChannel; i++ {
