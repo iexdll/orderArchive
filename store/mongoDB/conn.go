@@ -25,7 +25,7 @@ func Connection(databaseURL string) (*mongo.Database, error) {
 		return nil, err
 	}
 
-	db := client.Database("archiveOrder")
+	db := client.Database("priceService")
 
 	return db, nil
 }

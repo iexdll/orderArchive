@@ -17,17 +17,20 @@ func (r *OrderRepository) Save(o *models.Order) error {
 
 	tx, err := r.store.db.Begin()
 	if err != nil {
+		log.Println(1)
 		return err
 	}
 
 	_, err = tx.Exec("DELETE FROM orders WHERE id=$1", o.ID)
 	if err != nil {
+		log.Println(2)
 		_ = tx.Rollback()
 		return err
 	}
 
 	_, err = tx.Exec("DELETE FROM \"orderRows\" WHERE \"order\"=$1", o.ID)
 	if err != nil {
+		log.Println(3)
 		_ = tx.Rollback()
 		return err
 	}
@@ -65,6 +68,7 @@ func (r *OrderRepository) Save(o *models.Order) error {
 		o.WarehouseShipping)
 
 	if err != nil {
+		log.Println(4)
 		_ = tx.Rollback()
 		return err
 	}
@@ -82,6 +86,7 @@ func (r *OrderRepository) Save(o *models.Order) error {
 		") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)")
 
 	if err != nil {
+		log.Println(5)
 		_ = tx.Rollback()
 		return err
 	}
@@ -89,6 +94,7 @@ func (r *OrderRepository) Save(o *models.Order) error {
 	for _, item := range o.GoodsList {
 		_, err = stmt.Exec(o.ID, item.RowNumber, item.RowID, item.Goods, item.Group, item.Price, item.Count, item.CountCancel, item.Comment)
 		if err != nil {
+			log.Println(6)
 			log.Fatal(err)
 		}
 	}

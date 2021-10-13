@@ -17,8 +17,8 @@ var (
 	lockCountDoneOrders sync.Mutex
 )
 
-const dateStart = "2019-01-01"
-const dateEnd = "2019-02-01"
+const dateStart = "2019-02-01"
+const dateEnd = "2019-12-31"
 const countChannel = 30
 const countOrderChannel = 1000
 
@@ -118,7 +118,7 @@ func (w *Worker) process(c chan Slice) {
 			err = w.storeP.Order().Save(order)
 			if err != nil {
 				log.Printf("Ошибка записи заказа %s", oID)
-				log.Fatal(err)
+				//log.Fatal(err)
 			}
 
 			lockCountDoneOrders.Lock()
