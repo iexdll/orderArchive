@@ -1,0 +1,4 @@
+bind_addr = ":8015"
+log_level = "debug"
+db_postgresql = "host=192.168.0.1 port=5432 dbname=orders sslmode=disable user=postgres password=pwd"
+db_mongo = "mongodb://user:pwd@192.168.0.1:27017/"
